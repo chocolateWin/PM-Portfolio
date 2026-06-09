@@ -2,7 +2,7 @@
 
 > An offline‑first tool for logging books and films with 14 custom anchors (scent, place, memory, emotion…), cover image support, and full local storage.
 
-**[🔗 Live Demo]([file:///C:/Users/%E5%B7%A7%E5%85%8B%E5%8A%9B/Desktop/mvp/reading-log.html](https://chocolatewin.github.io/PM-Portfolio/#-run-locally))**  
+**[🔗 Live Demo](https://chocolatewin.github.io/PM-Portfolio/#-run-locally)**  
 
 ## ✨ Features
 
@@ -74,7 +74,7 @@ Star ⭐ and feedback are welcome!
 
 > 一款离线优先的阅读与观影记录工具，通过 14 个自定义锚点（气味、地点、回忆、情绪等）捕捉你的感性输出，并支持封面图片上传、本地持久化存储。
 
-**[🔗 在线 Demo]([https://yourusername.github.io/PM-Portfolio/](https://chocolatewin.github.io/PM-Portfolio/#-run-locally))**  
+**[🔗 在线 Demo](https://chocolatewin.github.io/PM-Portfolio/#-run-locally))**  
 
 ## ✨ 功能特性
 
