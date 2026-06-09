@@ -22,7 +22,7 @@
 - Responsive layout, works on mobile & desktop browsers
 
 ## 📸 Screenshots
-<img width="510" height="922" alt="image" src="https://github.com/user-attachments/assets/da48b505-d0bb-46ea-945b-df8d0c187997" />
+<img width="480" height="891" alt="屏幕截图 2026-06-09 111847" src="https://github.com/user-attachments/assets/6d5513bc-f882-4b22-b6da-0465fa4f0ab0" />
 <img width="510" height="922" alt="屏幕截图 2026-06-09 111915" src="https://github.com/user-attachments/assets/363e644a-60cf-4ed1-9227-ffa461936593" />
 <img width="478" height="911" alt="image" src="https://github.com/user-attachments/assets/9ccb0b94-27c5-41ab-996a-e0d6a1a530fc" />
 <img width="501" height="913" alt="image" src="https://github.com/user-attachments/assets/6d2bb342-f612-4b17-bbc1-f0904591e505" />
@@ -97,7 +97,7 @@ Star ⭐ and feedback are welcome!
 
 ## 📸 界面预览
 
-<img width="510" height="922" alt="image" src="https://github.com/user-attachments/assets/da48b505-d0bb-46ea-945b-df8d0c187997" />
+<img width="480" height="891" alt="屏幕截图 2026-06-09 111847" src="https://github.com/user-attachments/assets/e7259e02-fa6b-47e1-b200-8699a180e9a8" />
 <img width="510" height="922" alt="屏幕截图 2026-06-09 111915" src="https://github.com/user-attachments/assets/363e644a-60cf-4ed1-9227-ffa461936593" />
 <img width="478" height="911" alt="image" src="https://github.com/user-attachments/assets/9ccb0b94-27c5-41ab-996a-e0d6a1a530fc" />
 <img width="501" height="913" alt="image" src="https://github.com/user-attachments/assets/6d2bb342-f612-4b17-bbc1-f0904591e505" />
