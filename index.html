@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>阅读记录</title>
+    <title>阅读记录 Reading Log</title> Reading Log</title>
     <style>
         * {
             margin: 0;
@@ -458,10 +458,12 @@
             margin-top: 8px;
             margin-left: 32px;
             width: calc(100% - 32px);
-            padding: 10px;
+            padding: 8px;
             border: 1px solid #ddd;
             border-radius: 6px;
             font-size: 14px;
+            resize: vertical;
+            min-height: 40px;
         }
 
         .anchor-input:focus {
@@ -740,11 +742,11 @@
         <div class="home-container page">
             <div class="header">
                 <select id="filter-select" class="filter-select">
-                    <option value="all">全部</option>
-                    <option value="book">书</option>
-                    <option value="movie">影</option>
+                    <option value="all">全部 All</option>
+                    <option value="book">书 Book</option>
+                    <option value="movie">影 Movie</option>
                 </select>
-                <button id="add-btn" class="btn">新增</button>
+                <button id="add-btn" class="btn">新增 Add</button>
             </div>
             <div id="records-container"></div>
             <div id="stats" class="stats"></div>
@@ -752,124 +754,124 @@
 
         <div class="add-container page">
             <div class="header">
-                <button id="cancel-btn" class="btn btn-secondary">取消</button>
+                <button id="cancel-btn" class="btn btn-secondary">取消 Cancel</button>
                 <div style="width: 80px;"></div>
-                <button id="save-btn" class="btn">保存</button>
+                <button id="save-btn" class="btn">保存 Save</button>
             </div>
             <form id="add-form">
                 <div class="form-group">
-                    <label class="form-label">记录类型</label>
+                    <label class="form-label">记录类型 Type</label>
                     <div class="type-buttons">
-                        <button type="button" class="type-btn active" data-type="book">书</button>
-                        <button type="button" class="type-btn" data-type="movie">影</button>
+                        <button type="button" class="type-btn active" data-type="book">书 Book</button>
+                        <button type="button" class="type-btn" data-type="movie">影 Movie</button>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">封面</label>
+                    <label class="form-label">封面 Cover</label>
                     <div id="cover-upload-area" class="cover-upload-area">
                         <div id="cover-placeholder" class="cover-upload-placeholder">
                             <span class="icon">+</span>
-                            <span>点击上传封面</span>
+                            <span>点击上传封面 Tap to upload</span>
                         </div>
                         <div id="cover-preview-container" class="cover-preview-container" style="display: none;">
                             <img id="cover-preview-img" class="cover-preview-img" src="" alt="封面预览">
                             <div class="cover-actions">
-                                <button type="button" id="cover-change-btn" class="cover-action-btn">更换</button>
-                                <button type="button" id="cover-delete-btn" class="cover-action-btn delete">删除</button>
+                                <button type="button" id="cover-change-btn" class="cover-action-btn">更换 Change</button>
+                                <button type="button" id="cover-delete-btn" class="cover-action-btn delete">删除 Delete</button>
                             </div>
                         </div>
                     </div>
                     <input type="file" id="cover-input" accept="image/*">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">作品名</label>
-                    <input type="text" id="title" class="form-input" placeholder="请输入作品名">
+                    <label class="form-label">作品名 Title</label>
+                    <input type="text" id="title" class="form-input" placeholder="请输入作品名 Enter title">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">其他信息</label>
-                    <input type="text" id="other-info" class="form-input" placeholder="作者/导演/出版社等">
+                    <label class="form-label">其他信息 Other</label>
+                    <input type="text" id="other-info" class="form-input" placeholder="作者/导演/出版社等 Author/Director/Publisher">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">记录时间</label>
+                    <label class="form-label">记录时间 Date</label>
                     <input type="date" id="date" class="form-input">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">锚点</label>
+                    <label class="form-label">锚点 Anchors</label>
                     <div id="visible-anchors" class="anchor-group">
                         <div class="anchor-item">
                             <input type="checkbox" class="anchor-checkbox" data-anchor="气味">
-                            <label class="anchor-label">气味</label>
+                            <label class="anchor-label">气味 Scent</label>
                         </div>
                         <div class="anchor-item">
                             <input type="checkbox" class="anchor-checkbox" data-anchor="地点">
-                            <label class="anchor-label">地点</label>
+                            <label class="anchor-label">地点 Location</label>
                         </div>
                         <div class="anchor-item">
                             <input type="checkbox" class="anchor-checkbox" data-anchor="回忆">
-                            <label class="anchor-label">回忆</label>
+                            <label class="anchor-label">回忆 Memory</label>
                         </div>
                         <div class="anchor-item">
                             <input type="checkbox" class="anchor-checkbox" data-anchor="网络">
-                            <label class="anchor-label">网络</label>
+                            <label class="anchor-label">网络 Network</label>
                         </div>
                         <div class="anchor-item">
                             <input type="checkbox" class="anchor-checkbox" data-anchor="声音">
-                            <label class="anchor-label">声音</label>
+                            <label class="anchor-label">声音 Sound</label>
                         </div>
-                    </div>
-                    <button type="button" id="more-anchors-btn" class="more-btn">更多 ▼</button>
-                    <div id="hidden-anchors" class="anchor-group hidden-anchors">
                         <div class="anchor-item">
                             <input type="checkbox" class="anchor-checkbox" data-anchor="温度/天气">
-                            <label class="anchor-label">温度/天气</label>
+                            <label class="anchor-label">温度/天气 Temperature/Weather</label>
                         </div>
                         <div class="anchor-item">
                             <input type="checkbox" class="anchor-checkbox" data-anchor="情绪">
-                            <label class="anchor-label">情绪</label>
+                            <label class="anchor-label">情绪 Emotion</label>
                         </div>
+                    </div>
+                    <button type="button" id="more-anchors-btn" class="more-btn">更多 More ▼</button>
+                    <div id="hidden-anchors" class="anchor-group hidden-anchors">
                         <div class="anchor-item">
                             <input type="checkbox" class="anchor-checkbox" data-anchor="物件">
-                            <label class="anchor-label">物件</label>
+                            <label class="anchor-label">物件 Object</label>
                         </div>
                         <div class="anchor-item">
                             <input type="checkbox" class="anchor-checkbox" data-anchor="时间/时刻">
-                            <label class="anchor-label">时间/时刻</label>
+                            <label class="anchor-label">时间/时刻 Time/Moment</label>
                         </div>
                         <div class="anchor-item">
                             <input type="checkbox" class="anchor-checkbox" data-anchor="颜色/视觉">
-                            <label class="anchor-label">颜色/视觉</label>
+                            <label class="anchor-label">颜色/视觉 Color/Visual</label>
                         </div>
                         <div class="anchor-item">
                             <input type="checkbox" class="anchor-checkbox" data-anchor="书摘/台词">
-                            <label class="anchor-label">书摘/台词</label>
+                            <label class="anchor-label">书摘/台词 Excerpt/Line</label>
                         </div>
                         <div class="anchor-item">
                             <input type="checkbox" class="anchor-checkbox" data-anchor="人物/角色">
-                            <label class="anchor-label">人物/角色</label>
+                            <label class="anchor-label">人物/角色 Character</label>
                         </div>
                         <div class="anchor-item">
                             <input type="checkbox" class="anchor-checkbox" data-anchor="疑问/困惑">
-                            <label class="anchor-label">疑问/困惑</label>
+                            <label class="anchor-label">疑问/困惑 Question/Confusion</label>
                         </div>
                         <div class="anchor-item">
                             <input type="checkbox" class="anchor-checkbox" data-anchor="创意灵感">
-                            <label class="anchor-label">创意灵感</label>
+                            <label class="anchor-label">创意灵感 Creative Inspiration</label>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">小书评</label>
-                    <textarea id="review" class="form-textarea" placeholder="写下你的完整感受...（可选）"></textarea>
+                    <label class="form-label">小书评 Review</label>
+                    <textarea id="review" class="form-textarea" placeholder="写下你的完整感受...（可选） Write your full thoughts... (optional)"></textarea>
                 </div>
             </form>
         </div>
 
         <div class="detail-container page">
             <div class="detail-header">
-                <button id="detail-back-btn" class="btn btn-secondary">返回</button>
+                <button id="detail-back-btn" class="btn btn-secondary">返回 Back</button>
                 <div class="detail-header-right">
-                    <button id="detail-edit-btn" class="btn">编辑</button>
-                    <button id="detail-delete-btn" class="btn">删除</button>
+                    <button id="detail-edit-btn" class="btn">编辑 Edit</button>
+                    <button id="detail-delete-btn" class="btn">删除 Delete</button>
                 </div>
             </div>
             <div class="detail-card" id="detail-content">
@@ -882,27 +884,27 @@
                     <div id="profile-avatar" class="profile-avatar">
                         <span id="profile-avatar-placeholder">👤</span>
                     </div>
-                    <div id="profile-nickname" class="profile-nickname">用户</div>
+                    <div id="profile-nickname" class="profile-nickname">用户 User</div>
                 </div>
-                <div class="profile-version">版本 v1.0.0</div>
+                <div class="profile-version">版本 Version v1.0.0</div>
             </div>
         </div>
 
         <div id="confirm-modal" class="modal">
             <div class="modal-content">
-                <div class="modal-message">放弃本次记录？</div>
+                <div class="modal-message">放弃本次记录？ Discard this record?</div>
                 <div class="modal-buttons">
-                    <button id="confirm-no" class="btn btn-secondary">取消</button>
-                    <button id="confirm-yes" class="btn">确认</button>
+                    <button id="confirm-no" class="btn btn-secondary">取消 Cancel</button>
+                    <button id="confirm-yes" class="btn">确认 Confirm</button>
                 </div>
             </div>
         </div>
 
         <div id="detail-back-modal" class="modal">
             <div class="modal-content">
-                <div class="modal-message">确定要返回吗？</div>
+                <div class="modal-message">确定要返回吗？ Sure to go back?</div>
                 <div class="modal-buttons">
-                    <button id="detail-back-cancel" class="btn btn-secondary">取消</button>
+                    <button id="detail-back-cancel" class="btn btn-secondary">取消 Cancel</button>
                     <button id="detail-back-confirm" class="btn">确定</button>
                 </div>
             </div>
@@ -910,20 +912,29 @@
 
         <div id="delete-modal" class="modal">
             <div class="modal-content">
-                <div class="modal-message">确定删除该记录吗？</div>
+                <div class="modal-message">确定删除该记录吗？ Confirm delete?</div>
                 <div class="modal-buttons">
-                    <button id="delete-cancel" class="btn btn-secondary">取消</button>
-                    <button id="delete-confirm" class="btn">删除</button>
+                    <button id="delete-cancel" class="btn btn-secondary">取消 Cancel</button>
+                    <button id="delete-confirm" class="btn">删除 Delete</button>
                 </div>
             </div>
         </div>
 
         <div id="edit-back-modal" class="modal">
             <div class="modal-content">
-                <div class="modal-message">放弃修改？</div>
+                <div class="modal-message">放弃修改？ Discard changes?</div>
                 <div class="modal-buttons">
-                    <button id="edit-back-cancel" class="btn btn-secondary">取消</button>
+                    <button id="edit-back-cancel" class="btn btn-secondary">取消 Cancel</button>
                     <button id="edit-back-confirm" class="btn">确认</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="alert-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-message" id="alert-message"></div>
+                <div class="modal-buttons">
+                    <button id="alert-confirm" class="btn">确定 Confirm</button>
                 </div>
             </div>
         </div>
@@ -944,7 +955,16 @@
             loadUserProfile();
             bindEvents();
             document.getElementById('bottom-nav').style.display = 'flex';
+
+            const reviewTextarea = document.getElementById('review');
+            reviewTextarea.addEventListener('input', autoResizeTextarea);
+            autoResizeTextarea.call(reviewTextarea);
         });
+
+        function autoResizeTextarea() {
+            this.style.height = 'auto';
+            this.style.height = this.scrollHeight + 'px';
+        }
 
         function bindEvents() {
             document.getElementById('add-btn').addEventListener('click', function() {
@@ -1063,6 +1083,10 @@
                 showDetailPage();
             });
 
+            document.getElementById('alert-confirm').addEventListener('click', function() {
+                hideAlertModal();
+            });
+
             document.getElementById('profile-avatar').addEventListener('click', function() {
                 showActionSheet();
             });
@@ -1085,11 +1109,11 @@
 
             if (isExpanded) {
                 hiddenAnchors.style.display = 'none';
-                moreBtn.textContent = '更多 ▼';
+                moreBtn.textContent = '更多 More ▼';
                 anchorGroup.insertBefore(moreBtn, hiddenAnchors);
             } else {
                 hiddenAnchors.style.display = 'block';
-                moreBtn.textContent = '收起 ▲';
+                moreBtn.textContent = '收起 Collapse ▲';
                 anchorGroup.appendChild(moreBtn);
             }
             isExpanded = !isExpanded;
@@ -1104,12 +1128,12 @@
             }
 
             if (checkbox.checked) {
-                const input = document.createElement('input');
-                input.type = 'text';
-                input.className = 'anchor-input';
-                input.placeholder = '记录...';
-                input.dataset.anchor = checkbox.dataset.anchor;
-                anchorItem.appendChild(input);
+                const textarea = document.createElement('textarea');
+                textarea.className = 'anchor-input';
+                textarea.placeholder = '记录... Write here...';
+                textarea.dataset.anchor = checkbox.dataset.anchor;
+                textarea.rows = 2;
+                anchorItem.appendChild(textarea);
             }
         }
 
@@ -1168,6 +1192,15 @@
 
         function hideConfirmModal() {
             document.getElementById('confirm-modal').style.display = 'none';
+        }
+
+        function showAlertModal(message) {
+            document.getElementById('alert-message').textContent = message;
+            document.getElementById('alert-modal').style.display = 'flex';
+        }
+
+        function hideAlertModal() {
+            document.getElementById('alert-modal').style.display = 'none';
         }
 
         function resetForm() {
@@ -1257,7 +1290,7 @@
             const totalRecords = records.length;
             const bookCount = records.filter(r => r.type === 'book').length;
             const movieCount = records.filter(r => r.type === 'movie').length;
-            statsElement.textContent = `共 ${totalRecords} 条记录 · ${bookCount} 本书 ${movieCount} 部电影`;
+            statsElement.textContent = `共 ${totalRecords} 条记录 · ${bookCount} 本书 ${movieCount} 部电影 Records · Books · Movies`;
         }
 
         function saveRecord() {
@@ -1268,7 +1301,7 @@
             const cover = document.getElementById('cover-preview-img').src || '';
 
             if (!title) {
-                alert('请填写作品名');
+                showAlertModal('请填写作品名 Please enter a title');
                 return;
             }
 
@@ -1281,7 +1314,7 @@
             });
 
             if (Object.keys(anchors).length === 0 && !review) {
-                alert('请至少记录一项内容');
+                showAlertModal('请至少记录一项内容 Please fill in at least one item');
                 return;
             }
 
@@ -1322,11 +1355,29 @@
                 editId = null;
                 showDetailPage();
                 openDetailPage(currentEditId);
+                showToast('保存成功 Saved');
             } else {
                 showHomePage();
             }
             loadRecords();
             resetForm();
+        }
+
+        function showToast(message) {
+            const existingToast = document.getElementById('custom-toast');
+            if (existingToast) {
+                existingToast.remove();
+            }
+
+            const toast = document.createElement('div');
+            toast.id = 'custom-toast';
+            toast.textContent = message;
+            toast.style.cssText = 'position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.7); color: white; padding: 8px 16px; border-radius: 20px; font-size: 14px; z-index: 2000;';
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.remove();
+            }, 1500);
         }
 
         function getRecords() {
@@ -1348,7 +1399,7 @@
             const anchors = record.anchors || {};
             const anchorsHtml = Object.keys(anchors).length > 0
                 ? `
-                    <div class="detail-section-title">锚点记录</div>
+                    <div class="detail-section-title">锚点记录 Anchors</div>
                     <div class="detail-anchors">
                         ${Object.entries(anchors).map(([name, value]) => `
                             <div class="detail-anchor-item">
@@ -1371,7 +1422,7 @@
                 <div class="detail-content">
                     <div class="detail-title">${record.title}</div>
                     ${record.otherInfo ? `<div class="detail-other-info">${record.otherInfo}</div>` : ''}
-                    <div class="detail-date">记录时间：${record.date}</div>
+                    <div class="detail-date">记录时间 Date：${record.date}</div>
                     ${anchorsHtml}
                     ${reviewHtml}
                 </div>
@@ -1391,6 +1442,7 @@
             document.getElementById('other-info').value = record.otherInfo || '';
             document.getElementById('date').value = record.date;
             document.getElementById('review').value = record.review || '';
+            autoResizeTextarea.call(document.getElementById('review'));
 
             document.querySelectorAll('.type-btn').forEach(btn => {
                 if (btn.dataset.type === record.type) {
@@ -1422,13 +1474,13 @@
                 const anchorName = checkbox.dataset.anchor;
                 if (record.anchors && record.anchors[anchorName]) {
                     checkbox.checked = true;
-                    const input = document.createElement('input');
-                    input.type = 'text';
-                    input.className = 'anchor-input';
-                    input.placeholder = '记录...';
-                    input.dataset.anchor = anchorName;
-                    input.value = record.anchors[anchorName];
-                    anchorItem.appendChild(input);
+                    const textarea = document.createElement('textarea');
+                    textarea.className = 'anchor-input';
+                    textarea.placeholder = '记录... Write here...';
+                    textarea.dataset.anchor = anchorName;
+                    textarea.rows = 2;
+                    textarea.value = record.anchors[anchorName];
+                    anchorItem.appendChild(textarea);
                 }
             });
 
@@ -1482,7 +1534,7 @@
         function showNicknameModal() {
             hideActionSheet();
             const profile = getUserProfile();
-            document.getElementById('nickname-input').value = profile.nickname === '用户' ? '' : profile.nickname;
+            document.getElementById('nickname-input').value = profile.nickname === '用户 User' ? '' : profile.nickname;
             document.getElementById('nickname-modal').style.display = 'flex';
         }
 
@@ -1589,29 +1641,29 @@
 
     <div id="bottom-nav" class="bottom-nav">
         <div class="nav-item home active" onclick="showHomePage(); updateNavActive('home');">
-            <span>首页</span>
+            <span>首页 Home</span>
         </div>
         <div class="nav-item profile" onclick="showProfilePage();">
-            <span>我</span>
+            <span>我 Me</span>
         </div>
     </div>
 
     <div id="action-sheet-mask" class="action-sheet-mask">
         <div class="action-sheet">
-            <div class="action-sheet-item" onclick="document.getElementById('avatar-input').click();">更改头像</div>
-            <div class="action-sheet-item" onclick="showNicknameModal();">更改昵称</div>
-            <div class="action-sheet-item cancel" onclick="hideActionSheet();">取消</div>
+            <div class="action-sheet-item" onclick="document.getElementById('avatar-input').click();">更改头像 Change Avatar</div>
+            <div class="action-sheet-item" onclick="showNicknameModal();">更改昵称 Edit Nickname</div>
+            <div class="action-sheet-item cancel" onclick="hideActionSheet();">取消 Cancel</div>
         </div>
     </div>
     <input type="file" id="avatar-input" accept="image/*" style="display: none;" onchange="handleAvatarChange(event);">
 
     <div id="nickname-modal" class="nickname-modal">
         <div class="nickname-modal-content">
-            <div class="nickname-modal-title">修改昵称</div>
-            <input type="text" id="nickname-input" class="nickname-modal-input" placeholder="请输入新昵称">
+            <div class="nickname-modal-title">修改昵称 Edit Nickname</div>
+            <input type="text" id="nickname-input" class="nickname-modal-input" placeholder="请输入新昵称 Enter new nickname">
             <div class="nickname-modal-buttons">
-                <button class="btn btn-secondary" onclick="hideNicknameModal();">取消</button>
-                <button class="btn" onclick="handleNicknameSave();">保存</button>
+                <button class="btn btn-secondary" onclick="hideNicknameModal();">取消 Cancel</button>
+                <button class="btn" onclick="handleNicknameSave();">保存 Save</button>
             </div>
         </div>
     </div>
