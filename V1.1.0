@@ -1,0 +1,1671 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>阅读记录 Reading Log</title> Reading Log</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        .container {
+            max-width: 393px;
+            margin: 0 auto;
+            min-height: 100vh;
+            background-color: #f5f5f5;
+            position: relative;
+        }
+
+        .page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            max-width: 393px;
+            min-height: 100vh;
+            padding: 16px;
+            padding-bottom: 76px;
+            transition: all 0.3s ease;
+        }
+
+        .home-container {
+            display: block;
+        }
+
+        .add-container {
+            display: none;
+            background-color: #f5f5f5;
+        }
+
+        .detail-container {
+            display: none;
+            background-color: #f5f5f5;
+        }
+
+        .profile-container {
+            display: none;
+            background-color: #f5f5f5;
+            min-height: 100vh;
+        }
+
+        .profile-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: calc(100vh - 60px);
+            padding-top: 60px;
+        }
+
+        .profile-main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: #999;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-nickname {
+            margin-top: 16px;
+            font-size: 18px;
+            font-weight: 500;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .profile-nickname:hover {
+            color: #000;
+        }
+
+        .profile-version {
+            font-size: 14px;
+            color: #999;
+            text-align: center;
+            padding-bottom: 20px;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 393px;
+            height: 60px;
+            background-color: white;
+            border-top: 1px solid #e0e0e0;
+            display: none;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 8px 16px;
+            height: 44px;
+            color: #999;
+            font-size: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item:hover {
+            color: #666;
+        }
+
+        .nav-item.active {
+            color: #333;
+            font-weight: 700;
+        }
+
+        .nav-item .nav-icon {
+            display: none;
+        }
+
+        .action-sheet-mask {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            z-index: 1000;
+            display: none;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .action-sheet {
+            width: 100%;
+            max-width: 393px;
+            background: white;
+            border-radius: 16px 16px 0 0;
+            overflow: hidden;
+            animation: slideUp 0.2s ease;
+        }
+
+        .action-sheet-item {
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            border-bottom: 0.5px solid #e0e0e0;
+            cursor: pointer;
+        }
+
+        .action-sheet-item:last-child {
+            border-bottom: none;
+        }
+
+        .action-sheet-item.cancel {
+            font-weight: 500;
+            color: #b71c1c;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .nickname-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1002;
+        }
+
+        .nickname-modal-content {
+            background-color: white;
+            border-radius: 12px;
+            padding: 24px;
+            width: 80%;
+            max-width: 300px;
+        }
+
+        .nickname-modal-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .nickname-modal-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+
+        .nickname-modal-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .nickname-modal-buttons .btn {
+            flex: 1;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background-color: #333;
+            color: white;
+        }
+
+        .btn:hover {
+            opacity: 0.8;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: #333;
+        }
+
+        .filter-select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            background-color: white;
+            cursor: pointer;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .record-item {
+            display: flex;
+            gap: 12px;
+        }
+
+        .record-cover {
+            width: 40px;
+            height: 56px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .record-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .record-title-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+
+        .record-type-icon {
+            font-size: 16px;
+            line-height: 1;
+        }
+
+        .record-title {
+            font-size: 16px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .record-date {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 4px;
+        }
+
+        .record-other {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .record-preview {
+            font-size: 14px;
+            color: #666;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .stats {
+            text-align: center;
+            font-size: 14px;
+            color: #999;
+            padding: 20px 0;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: white;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #333;
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: white;
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: #333;
+        }
+
+        .type-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .type-btn {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: white;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .type-btn.active {
+            background-color: #333;
+            color: white;
+            border-color: #333;
+        }
+
+        .anchor-group {
+            margin-bottom: 12px;
+        }
+
+        .anchor-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .anchor-checkbox {
+            margin-right: 12px;
+            width: 20px;
+            height: 20px;
+        }
+
+        .anchor-label {
+            flex: 1;
+            font-size: 14px;
+        }
+
+        .anchor-input {
+            margin-top: 8px;
+            margin-left: 32px;
+            width: calc(100% - 32px);
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 40px;
+        }
+
+        .anchor-input:focus {
+            outline: none;
+            border-color: #333;
+        }
+
+        .more-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            background-color: transparent;
+            color: #333;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: center;
+            margin: 12px 0;
+        }
+
+        .more-btn:active {
+            opacity: 0.7;
+        }
+
+        .hidden-anchors {
+            display: none;
+        }
+
+        .cover-upload-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-height: 100px;
+        }
+
+        .cover-upload-area:hover {
+            border-color: #999;
+        }
+
+        .cover-upload-area:active {
+            opacity: 0.7;
+        }
+
+        .cover-upload-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cover-upload-placeholder .icon {
+            font-size: 32px;
+            color: #999;
+        }
+
+        .cover-upload-placeholder span {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .cover-preview-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .cover-preview-img {
+            max-width: 80px;
+            height: auto;
+            border-radius: 4px;
+            object-fit: cover;
+        }
+
+        .cover-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .cover-action-btn {
+            padding: 6px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .cover-action-btn:hover {
+            background-color: #f5f5f5;
+        }
+
+        .cover-action-btn.delete {
+            color: #e53935;
+            border-color: #e53935;
+        }
+
+        .cover-action-btn.delete:hover {
+            background-color: #ffebee;
+        }
+
+        #cover-input {
+            display: none;
+        }
+
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 16px;
+        }
+
+        .detail-header-right {
+            display: flex;
+            gap: 12px;
+        }
+
+        .detail-header-right .btn {
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+
+        .detail-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 0;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .detail-cover {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+        }
+
+        .detail-cover-placeholder {
+            width: 100%;
+            height: 200px;
+            background-color: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: #999;
+        }
+
+        .detail-content {
+            padding: 16px;
+        }
+
+        .detail-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .detail-other-info {
+            font-size: 14px;
+            color: #999;
+            margin-bottom: 8px;
+        }
+
+        .detail-date {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 16px;
+        }
+
+        .detail-section-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .detail-anchors {
+            margin-bottom: 16px;
+        }
+
+        .detail-anchor-item {
+            font-size: 14px;
+            color: #666;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .detail-anchor-item:last-child {
+            border-bottom: none;
+        }
+
+        .detail-anchor-name {
+            font-weight: 500;
+            color: #333;
+            margin-right: 8px;
+        }
+
+        .detail-review {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+
+        .record-cover-img {
+            width: 40px;
+            height: 56px;
+            border-radius: 4px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .record-cover-placeholder {
+            width: 40px;
+            height: 56px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: #999;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 12px;
+            padding: 24px;
+            width: 80%;
+            max-width: 300px;
+        }
+
+        .modal-message {
+            font-size: 16px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .modal-buttons .btn {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="home-container page">
+            <div class="header">
+                <select id="filter-select" class="filter-select">
+                    <option value="all">全部 All</option>
+                    <option value="book">书 Book</option>
+                    <option value="movie">影 Movie</option>
+                </select>
+                <button id="add-btn" class="btn">新增 Add</button>
+            </div>
+            <div id="records-container"></div>
+            <div id="stats" class="stats"></div>
+        </div>
+
+        <div class="add-container page">
+            <div class="header">
+                <button id="cancel-btn" class="btn btn-secondary">取消 Cancel</button>
+                <div style="width: 80px;"></div>
+                <button id="save-btn" class="btn">保存 Save</button>
+            </div>
+            <form id="add-form">
+                <div class="form-group">
+                    <label class="form-label">记录类型 Type</label>
+                    <div class="type-buttons">
+                        <button type="button" class="type-btn active" data-type="book">书 Book</button>
+                        <button type="button" class="type-btn" data-type="movie">影 Movie</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">封面 Cover</label>
+                    <div id="cover-upload-area" class="cover-upload-area">
+                        <div id="cover-placeholder" class="cover-upload-placeholder">
+                            <span class="icon">+</span>
+                            <span>点击上传封面 Tap to upload</span>
+                        </div>
+                        <div id="cover-preview-container" class="cover-preview-container" style="display: none;">
+                            <img id="cover-preview-img" class="cover-preview-img" src="" alt="封面预览">
+                            <div class="cover-actions">
+                                <button type="button" id="cover-change-btn" class="cover-action-btn">更换 Change</button>
+                                <button type="button" id="cover-delete-btn" class="cover-action-btn delete">删除 Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="file" id="cover-input" accept="image/*">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">作品名 Title</label>
+                    <input type="text" id="title" class="form-input" placeholder="请输入作品名 Enter title">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">其他信息 Other</label>
+                    <input type="text" id="other-info" class="form-input" placeholder="作者/导演/出版社等 Author/Director/Publisher">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">记录时间 Date</label>
+                    <input type="date" id="date" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">锚点 Anchors</label>
+                    <div id="visible-anchors" class="anchor-group">
+                        <div class="anchor-item">
+                            <input type="checkbox" class="anchor-checkbox" data-anchor="气味">
+                            <label class="anchor-label">气味 Scent</label>
+                        </div>
+                        <div class="anchor-item">
+                            <input type="checkbox" class="anchor-checkbox" data-anchor="地点">
+                            <label class="anchor-label">地点 Location</label>
+                        </div>
+                        <div class="anchor-item">
+                            <input type="checkbox" class="anchor-checkbox" data-anchor="回忆">
+                            <label class="anchor-label">回忆 Memory</label>
+                        </div>
+                        <div class="anchor-item">
+                            <input type="checkbox" class="anchor-checkbox" data-anchor="网络">
+                            <label class="anchor-label">网络 Network</label>
+                        </div>
+                        <div class="anchor-item">
+                            <input type="checkbox" class="anchor-checkbox" data-anchor="声音">
+                            <label class="anchor-label">声音 Sound</label>
+                        </div>
+                        <div class="anchor-item">
+                            <input type="checkbox" class="anchor-checkbox" data-anchor="温度/天气">
+                            <label class="anchor-label">温度/天气 Temperature/Weather</label>
+                        </div>
+                        <div class="anchor-item">
+                            <input type="checkbox" class="anchor-checkbox" data-anchor="情绪">
+                            <label class="anchor-label">情绪 Emotion</label>
+                        </div>
+                    </div>
+                    <button type="button" id="more-anchors-btn" class="more-btn">更多 More ▼</button>
+                    <div id="hidden-anchors" class="anchor-group hidden-anchors">
+                        <div class="anchor-item">
+                            <input type="checkbox" class="anchor-checkbox" data-anchor="物件">
+                            <label class="anchor-label">物件 Object</label>
+                        </div>
+                        <div class="anchor-item">
+                            <input type="checkbox" class="anchor-checkbox" data-anchor="时间/时刻">
+                            <label class="anchor-label">时间/时刻 Time/Moment</label>
+                        </div>
+                        <div class="anchor-item">
+                            <input type="checkbox" class="anchor-checkbox" data-anchor="颜色/视觉">
+                            <label class="anchor-label">颜色/视觉 Color/Visual</label>
+                        </div>
+                        <div class="anchor-item">
+                            <input type="checkbox" class="anchor-checkbox" data-anchor="书摘/台词">
+                            <label class="anchor-label">书摘/台词 Excerpt/Line</label>
+                        </div>
+                        <div class="anchor-item">
+                            <input type="checkbox" class="anchor-checkbox" data-anchor="人物/角色">
+                            <label class="anchor-label">人物/角色 Character</label>
+                        </div>
+                        <div class="anchor-item">
+                            <input type="checkbox" class="anchor-checkbox" data-anchor="疑问/困惑">
+                            <label class="anchor-label">疑问/困惑 Question/Confusion</label>
+                        </div>
+                        <div class="anchor-item">
+                            <input type="checkbox" class="anchor-checkbox" data-anchor="创意灵感">
+                            <label class="anchor-label">创意灵感 Creative Inspiration</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">小书评 Review</label>
+                    <textarea id="review" class="form-textarea" placeholder="写下你的完整感受...（可选） Write your full thoughts... (optional)"></textarea>
+                </div>
+            </form>
+        </div>
+
+        <div class="detail-container page">
+            <div class="detail-header">
+                <button id="detail-back-btn" class="btn btn-secondary">返回 Back</button>
+                <div class="detail-header-right">
+                    <button id="detail-edit-btn" class="btn">编辑 Edit</button>
+                    <button id="detail-delete-btn" class="btn">删除 Delete</button>
+                </div>
+            </div>
+            <div class="detail-card" id="detail-content">
+            </div>
+        </div>
+
+        <div class="profile-container page">
+            <div class="profile-content">
+                <div class="profile-main">
+                    <div id="profile-avatar" class="profile-avatar">
+                        <span id="profile-avatar-placeholder">👤</span>
+                    </div>
+                    <div id="profile-nickname" class="profile-nickname">用户 User</div>
+                </div>
+                <div class="profile-version">版本 Version v1.0.0</div>
+            </div>
+        </div>
+
+        <div id="confirm-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-message">放弃本次记录？ Discard this record?</div>
+                <div class="modal-buttons">
+                    <button id="confirm-no" class="btn btn-secondary">取消 Cancel</button>
+                    <button id="confirm-yes" class="btn">确认 Confirm</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="detail-back-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-message">确定要返回吗？ Sure to go back?</div>
+                <div class="modal-buttons">
+                    <button id="detail-back-cancel" class="btn btn-secondary">取消 Cancel</button>
+                    <button id="detail-back-confirm" class="btn">确定</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="delete-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-message">确定删除该记录吗？ Confirm delete?</div>
+                <div class="modal-buttons">
+                    <button id="delete-cancel" class="btn btn-secondary">取消 Cancel</button>
+                    <button id="delete-confirm" class="btn">删除 Delete</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="edit-back-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-message">放弃修改？ Discard changes?</div>
+                <div class="modal-buttons">
+                    <button id="edit-back-cancel" class="btn btn-secondary">取消 Cancel</button>
+                    <button id="edit-back-confirm" class="btn">确认</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="alert-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-message" id="alert-message"></div>
+                <div class="modal-buttons">
+                    <button id="alert-confirm" class="btn">确定 Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentType = 'book';
+        let currentFilter = 'all';
+        let isExpanded = false;
+        let isEditMode = false;
+        let editId = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('date').value = today;
+
+            loadRecords();
+            loadUserProfile();
+            bindEvents();
+            document.getElementById('bottom-nav').style.display = 'flex';
+
+            const reviewTextarea = document.getElementById('review');
+            reviewTextarea.addEventListener('input', autoResizeTextarea);
+            autoResizeTextarea.call(reviewTextarea);
+        });
+
+        function autoResizeTextarea() {
+            this.style.height = 'auto';
+            this.style.height = this.scrollHeight + 'px';
+        }
+
+        function bindEvents() {
+            document.getElementById('add-btn').addEventListener('click', function() {
+                showAddPage();
+            });
+
+            document.getElementById('cancel-btn').addEventListener('click', function() {
+                if (isEditMode) {
+                    showEditBackModal();
+                } else {
+                    showConfirmModal();
+                }
+            });
+
+            document.getElementById('save-btn').addEventListener('click', function() {
+                saveRecord();
+            });
+
+            document.querySelectorAll('.type-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentType = this.dataset.type;
+                });
+            });
+
+            document.getElementById('filter-select').addEventListener('change', function() {
+                currentFilter = this.value;
+                loadRecords();
+            });
+
+            document.getElementById('more-anchors-btn').addEventListener('click', function() {
+                toggleAnchors();
+            });
+
+            document.querySelectorAll('.anchor-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    handleAnchorCheckboxChange(this);
+                });
+            });
+
+            document.getElementById('confirm-no').addEventListener('click', function() {
+                hideConfirmModal();
+            });
+
+            document.getElementById('confirm-yes').addEventListener('click', function() {
+                hideConfirmModal();
+                showHomePage();
+                resetForm();
+            });
+
+            document.getElementById('cover-upload-area').addEventListener('click', function(e) {
+                if (e.target.classList.contains('cover-action-btn')) return;
+                document.getElementById('cover-input').click();
+            });
+
+            document.getElementById('cover-input').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        document.getElementById('cover-preview-img').src = event.target.result;
+                        document.getElementById('cover-placeholder').style.display = 'none';
+                        document.getElementById('cover-preview-container').style.display = 'flex';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            document.getElementById('cover-change-btn').addEventListener('click', function() {
+                document.getElementById('cover-input').click();
+            });
+
+            document.getElementById('cover-delete-btn').addEventListener('click', function() {
+                document.getElementById('cover-preview-img').src = '';
+                document.getElementById('cover-placeholder').style.display = 'flex';
+                document.getElementById('cover-preview-container').style.display = 'none';
+                document.getElementById('cover-input').value = '';
+            });
+
+            document.getElementById('detail-back-btn').addEventListener('click', function() {
+                showDetailBackModal();
+            });
+
+            document.getElementById('detail-edit-btn').addEventListener('click', function() {
+                handleEdit();
+            });
+
+            document.getElementById('detail-delete-btn').addEventListener('click', function() {
+                showDeleteModal();
+            });
+
+            document.getElementById('detail-back-cancel').addEventListener('click', function() {
+                hideDetailBackModal();
+            });
+
+            document.getElementById('detail-back-confirm').addEventListener('click', function() {
+                hideDetailBackModal();
+                showHomePage();
+            });
+
+            document.getElementById('delete-cancel').addEventListener('click', function() {
+                hideDeleteModal();
+            });
+
+            document.getElementById('delete-confirm').addEventListener('click', function() {
+                handleDelete();
+            });
+
+            document.getElementById('edit-back-cancel').addEventListener('click', function() {
+                hideEditBackModal();
+            });
+
+            document.getElementById('edit-back-confirm').addEventListener('click', function() {
+                hideEditBackModal();
+                showDetailPage();
+            });
+
+            document.getElementById('alert-confirm').addEventListener('click', function() {
+                hideAlertModal();
+            });
+
+            document.getElementById('profile-avatar').addEventListener('click', function() {
+                showActionSheet();
+            });
+
+            document.getElementById('profile-nickname').addEventListener('click', function() {
+                showNicknameModal();
+            });
+
+            document.getElementById('action-sheet-mask').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    hideActionSheet();
+                }
+            });
+        }
+
+        function toggleAnchors() {
+            const hiddenAnchors = document.getElementById('hidden-anchors');
+            const moreBtn = document.getElementById('more-anchors-btn');
+            const anchorGroup = document.querySelector('#visible-anchors').parentNode;
+
+            if (isExpanded) {
+                hiddenAnchors.style.display = 'none';
+                moreBtn.textContent = '更多 More ▼';
+                anchorGroup.insertBefore(moreBtn, hiddenAnchors);
+            } else {
+                hiddenAnchors.style.display = 'block';
+                moreBtn.textContent = '收起 Collapse ▲';
+                anchorGroup.appendChild(moreBtn);
+            }
+            isExpanded = !isExpanded;
+        }
+
+        function handleAnchorCheckboxChange(checkbox) {
+            const anchorItem = checkbox.closest('.anchor-item');
+            const existingInput = anchorItem.querySelector('.anchor-input');
+
+            if (existingInput) {
+                anchorItem.removeChild(existingInput);
+            }
+
+            if (checkbox.checked) {
+                const textarea = document.createElement('textarea');
+                textarea.className = 'anchor-input';
+                textarea.placeholder = '记录... Write here...';
+                textarea.dataset.anchor = checkbox.dataset.anchor;
+                textarea.rows = 2;
+                anchorItem.appendChild(textarea);
+            }
+        }
+
+        function showHomePage() {
+            document.querySelector('.home-container').style.display = 'block';
+            document.querySelector('.add-container').style.display = 'none';
+            document.querySelector('.detail-container').style.display = 'none';
+            document.querySelector('.profile-container').style.display = 'none';
+            document.getElementById('bottom-nav').style.display = 'flex';
+            updateNavActive('home');
+        }
+
+        function showAddPage() {
+            document.querySelector('.home-container').style.display = 'none';
+            document.querySelector('.detail-container').style.display = 'none';
+            document.querySelector('.profile-container').style.display = 'none';
+            document.querySelector('.add-container').style.display = 'block';
+            document.getElementById('bottom-nav').style.display = 'none';
+        }
+
+        function showDetailPage() {
+            document.querySelector('.home-container').style.display = 'none';
+            document.querySelector('.add-container').style.display = 'none';
+            document.querySelector('.profile-container').style.display = 'none';
+            document.querySelector('.detail-container').style.display = 'block';
+            document.getElementById('bottom-nav').style.display = 'none';
+        }
+
+        function showDetailBackModal() {
+            document.getElementById('detail-back-modal').style.display = 'flex';
+        }
+
+        function hideDetailBackModal() {
+            document.getElementById('detail-back-modal').style.display = 'none';
+        }
+
+        function showDeleteModal() {
+            document.getElementById('delete-modal').style.display = 'flex';
+        }
+
+        function hideDeleteModal() {
+            document.getElementById('delete-modal').style.display = 'none';
+        }
+
+        function showEditBackModal() {
+            document.getElementById('edit-back-modal').style.display = 'flex';
+        }
+
+        function hideEditBackModal() {
+            document.getElementById('edit-back-modal').style.display = 'none';
+        }
+
+        function showConfirmModal() {
+            document.getElementById('confirm-modal').style.display = 'flex';
+        }
+
+        function hideConfirmModal() {
+            document.getElementById('confirm-modal').style.display = 'none';
+        }
+
+        function showAlertModal(message) {
+            document.getElementById('alert-message').textContent = message;
+            document.getElementById('alert-modal').style.display = 'flex';
+        }
+
+        function hideAlertModal() {
+            document.getElementById('alert-modal').style.display = 'none';
+        }
+
+        function resetForm() {
+            document.getElementById('title').value = '';
+            document.getElementById('other-info').value = '';
+            document.getElementById('review').value = '';
+
+            document.querySelectorAll('.type-btn').forEach(btn => {
+                if (btn.dataset.type === 'book') {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            currentType = 'book';
+
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('date').value = today;
+
+            document.querySelectorAll('.anchor-checkbox').forEach(checkbox => {
+                checkbox.checked = false;
+                const anchorItem = checkbox.closest('.anchor-item');
+                const existingInput = anchorItem.querySelector('.anchor-input');
+                if (existingInput) {
+                    anchorItem.removeChild(existingInput);
+                }
+            });
+
+            if (isExpanded) {
+                toggleAnchors();
+            }
+
+            document.getElementById('cover-preview-img').src = '';
+            document.getElementById('cover-placeholder').style.display = 'flex';
+            document.getElementById('cover-preview-container').style.display = 'none';
+        }
+
+        function loadRecords() {
+            const records = getRecords();
+            const container = document.getElementById('records-container');
+            const statsElement = document.getElementById('stats');
+
+            const filteredRecords = records.filter(record => {
+                if (currentFilter === 'all') return true;
+                return record.type === currentFilter;
+            });
+
+            filteredRecords.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            if (filteredRecords.length === 0) {
+                container.innerHTML = '';
+            } else {
+                container.innerHTML = filteredRecords.map(record => {
+                    const anchorCount = Object.keys(record.anchors || {}).length;
+                    const typeIcon = record.type === 'book' ? '📖' : '🎬';
+
+                    let previewText = '';
+                    if (record.review) {
+                        previewText = record.review.substring(0, 30) + (record.review.length > 30 ? '...' : '');
+                    } else if (anchorCount > 0) {
+                        previewText = `记录了 ${anchorCount} 个锚点`;
+                    }
+
+                    return `
+                        <div class="card record-item" data-id="${record.id}">
+                            ${record.cover ? `<img class="record-cover-img" src="${record.cover}" alt="封面">` : '<div class="record-cover-placeholder">📷</div>'}
+                            <div class="record-info">
+                                <div class="record-title-row">
+                                    <span class="record-type-icon">${typeIcon}</span>
+                                    <span class="record-title">${record.title}</span>
+                                </div>
+                                <div class="record-date">${record.date}</div>
+                                ${record.otherInfo ? `<div class="record-other">${record.otherInfo}</div>` : ''}
+                                ${previewText ? `<div class="record-preview">${previewText}</div>` : ''}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                document.querySelectorAll('.record-item').forEach(item => {
+                    item.addEventListener('click', function() {
+                        openDetailPage(this.dataset.id);
+                    });
+                });
+            }
+
+            const totalRecords = records.length;
+            const bookCount = records.filter(r => r.type === 'book').length;
+            const movieCount = records.filter(r => r.type === 'movie').length;
+            statsElement.textContent = `共 ${totalRecords} 条记录 · ${bookCount} 本书 ${movieCount} 部电影 Records · Books · Movies`;
+        }
+
+        function saveRecord() {
+            const title = document.getElementById('title').value.trim();
+            const otherInfo = document.getElementById('other-info').value.trim();
+            const date = document.getElementById('date').value;
+            const review = document.getElementById('review').value.trim();
+            const cover = document.getElementById('cover-preview-img').src || '';
+
+            if (!title) {
+                showAlertModal('请填写作品名 Please enter a title');
+                return;
+            }
+
+            const anchors = {};
+            document.querySelectorAll('.anchor-input').forEach(input => {
+                const value = input.value.trim();
+                if (value) {
+                    anchors[input.dataset.anchor] = value;
+                }
+            });
+
+            if (Object.keys(anchors).length === 0 && !review) {
+                showAlertModal('请至少记录一项内容 Please fill in at least one item');
+                return;
+            }
+
+            const records = getRecords();
+
+            if (isEditMode) {
+                const index = records.findIndex(r => r.id === editId);
+                if (index !== -1) {
+                    records[index] = {
+                        id: editId,
+                        title: title,
+                        type: currentType,
+                        otherInfo: otherInfo,
+                        date: date,
+                        anchors: anchors,
+                        review: review,
+                        cover: cover
+                    };
+                }
+            } else {
+                records.push({
+                    id: Date.now().toString(),
+                    title: title,
+                    type: currentType,
+                    otherInfo: otherInfo,
+                    date: date,
+                    anchors: anchors,
+                    review: review,
+                    cover: cover
+                });
+            }
+
+            localStorage.setItem('records', JSON.stringify(records));
+
+            if (isEditMode) {
+                const currentEditId = editId;
+                isEditMode = false;
+                editId = null;
+                showDetailPage();
+                openDetailPage(currentEditId);
+                showToast('保存成功 Saved');
+            } else {
+                showHomePage();
+            }
+            loadRecords();
+            resetForm();
+        }
+
+        function showToast(message) {
+            const existingToast = document.getElementById('custom-toast');
+            if (existingToast) {
+                existingToast.remove();
+            }
+
+            const toast = document.createElement('div');
+            toast.id = 'custom-toast';
+            toast.textContent = message;
+            toast.style.cssText = 'position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.7); color: white; padding: 8px 16px; border-radius: 20px; font-size: 14px; z-index: 2000;';
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.remove();
+            }, 1500);
+        }
+
+        function getRecords() {
+            const records = localStorage.getItem('records');
+            return records ? JSON.parse(records) : [];
+        }
+
+        function openDetailPage(id) {
+            const records = getRecords();
+            const record = records.find(r => r.id === id);
+            if (!record) return;
+
+            editId = id;
+
+            const coverHtml = record.cover 
+                ? `<img class="detail-cover" src="${record.cover}" alt="封面">`
+                : '<div class="detail-cover-placeholder">📷</div>';
+
+            const anchors = record.anchors || {};
+            const anchorsHtml = Object.keys(anchors).length > 0
+                ? `
+                    <div class="detail-section-title">锚点记录 Anchors</div>
+                    <div class="detail-anchors">
+                        ${Object.entries(anchors).map(([name, value]) => `
+                            <div class="detail-anchor-item">
+                                <span class="detail-anchor-name">${name}</span>：${value}
+                            </div>
+                        `).join('')}
+                    </div>
+                `
+                : '';
+
+            const reviewHtml = record.review
+                ? `
+                    <div class="detail-section-title">小书评</div>
+                    <div class="detail-review">${record.review}</div>
+                `
+                : '';
+
+            document.getElementById('detail-content').innerHTML = `
+                ${coverHtml}
+                <div class="detail-content">
+                    <div class="detail-title">${record.title}</div>
+                    ${record.otherInfo ? `<div class="detail-other-info">${record.otherInfo}</div>` : ''}
+                    <div class="detail-date">记录时间 Date：${record.date}</div>
+                    ${anchorsHtml}
+                    ${reviewHtml}
+                </div>
+            `;
+
+            showDetailPage();
+        }
+
+        function handleEdit() {
+            const records = getRecords();
+            const record = records.find(r => r.id === editId);
+            if (!record) return;
+
+            isEditMode = true;
+
+            document.getElementById('title').value = record.title;
+            document.getElementById('other-info').value = record.otherInfo || '';
+            document.getElementById('date').value = record.date;
+            document.getElementById('review').value = record.review || '';
+            autoResizeTextarea.call(document.getElementById('review'));
+
+            document.querySelectorAll('.type-btn').forEach(btn => {
+                if (btn.dataset.type === record.type) {
+                    btn.classList.add('active');
+                    currentType = record.type;
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            if (record.cover) {
+                document.getElementById('cover-preview-img').src = record.cover;
+                document.getElementById('cover-placeholder').style.display = 'none';
+                document.getElementById('cover-preview-container').style.display = 'flex';
+            } else {
+                document.getElementById('cover-preview-img').src = '';
+                document.getElementById('cover-placeholder').style.display = 'flex';
+                document.getElementById('cover-preview-container').style.display = 'none';
+            }
+
+            document.querySelectorAll('.anchor-checkbox').forEach(checkbox => {
+                checkbox.checked = false;
+                const anchorItem = checkbox.closest('.anchor-item');
+                const existingInput = anchorItem.querySelector('.anchor-input');
+                if (existingInput) {
+                    anchorItem.removeChild(existingInput);
+                }
+
+                const anchorName = checkbox.dataset.anchor;
+                if (record.anchors && record.anchors[anchorName]) {
+                    checkbox.checked = true;
+                    const textarea = document.createElement('textarea');
+                    textarea.className = 'anchor-input';
+                    textarea.placeholder = '记录... Write here...';
+                    textarea.dataset.anchor = anchorName;
+                    textarea.rows = 2;
+                    textarea.value = record.anchors[anchorName];
+                    anchorItem.appendChild(textarea);
+                }
+            });
+
+            if (!isExpanded) {
+                toggleAnchors();
+            }
+
+            showAddPage();
+        }
+
+        function handleDelete() {
+            const records = getRecords().filter(r => r.id !== editId);
+            localStorage.setItem('records', JSON.stringify(records));
+            hideDeleteModal();
+            showHomePage();
+            loadRecords();
+        }
+
+        function loadUserProfile() {
+            const profile = getUserProfile();
+            if (profile.nickname) {
+                document.getElementById('profile-nickname').textContent = profile.nickname;
+            }
+            if (profile.avatar) {
+                const avatarEl = document.getElementById('profile-avatar');
+                avatarEl.innerHTML = '';
+                const img = document.createElement('img');
+                img.src = profile.avatar;
+                img.alt = '头像';
+                avatarEl.appendChild(img);
+            }
+        }
+
+        function getUserProfile() {
+            const profile = localStorage.getItem('userProfile');
+            return profile ? JSON.parse(profile) : { nickname: '用户', avatar: '' };
+        }
+
+        function saveUserProfile(profile) {
+            localStorage.setItem('userProfile', JSON.stringify(profile));
+        }
+
+        function showActionSheet() {
+            document.getElementById('action-sheet-mask').style.display = 'flex';
+        }
+
+        function hideActionSheet() {
+            document.getElementById('action-sheet-mask').style.display = 'none';
+        }
+
+        function showNicknameModal() {
+            hideActionSheet();
+            const profile = getUserProfile();
+            document.getElementById('nickname-input').value = profile.nickname === '用户 User' ? '' : profile.nickname;
+            document.getElementById('nickname-modal').style.display = 'flex';
+        }
+
+        function hideNicknameModal() {
+            document.getElementById('nickname-modal').style.display = 'none';
+        }
+
+        function handleAvatarChange(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const originalBase64 = event.target.result;
+                    console.log('Original base64 size:', Math.round(originalBase64.length * 0.75), 'bytes');
+                    
+                    const img = new Image();
+                    img.onload = function() {
+                        const compressedBase64 = compressImage(img, 500, 0.7);
+                        console.log('Compressed base64 size:', Math.round(compressedBase64.length * 0.75), 'bytes');
+                        console.log('Compressed base64 (first 100 chars):', compressedBase64.substring(0, 100));
+                        
+                        const profile = getUserProfile();
+                        profile.avatar = compressedBase64;
+                        saveUserProfile(profile);
+                        
+                        const avatarEl = document.getElementById('profile-avatar');
+                        avatarEl.innerHTML = '';
+                        const avatarImg = document.createElement('img');
+                        avatarImg.src = compressedBase64;
+                        avatarImg.alt = '头像';
+                        avatarEl.appendChild(avatarImg);
+                        hideActionSheet();
+                    };
+                    img.src = originalBase64;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function compressImage(img, maxSize, quality) {
+            const canvas = document.createElement('canvas');
+            let width = img.width;
+            let height = img.height;
+            
+            if (width > maxSize || height > maxSize) {
+                if (width > height) {
+                    height = (height * maxSize) / width;
+                    width = maxSize;
+                } else {
+                    width = (width * maxSize) / height;
+                    height = maxSize;
+                }
+            }
+            
+            canvas.width = width;
+            canvas.height = height;
+            
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            
+            let compressed = canvas.toDataURL('image/jpeg', quality);
+            let currentQuality = quality;
+            
+            while (compressed.length * 0.75 > 200 * 1024 && currentQuality > 0.1) {
+                currentQuality -= 0.1;
+                compressed = canvas.toDataURL('image/jpeg', currentQuality);
+                console.log('Re-compressing with quality:', currentQuality, 'size:', Math.round(compressed.length * 0.75), 'bytes');
+            }
+            
+            return compressed;
+        }
+
+        function handleNicknameSave() {
+            const nickname = document.getElementById('nickname-input').value.trim();
+            if (nickname) {
+                const profile = getUserProfile();
+                profile.nickname = nickname;
+                saveUserProfile(profile);
+                document.getElementById('profile-nickname').textContent = nickname;
+            }
+            hideNicknameModal();
+        }
+
+        function showProfilePage() {
+            document.querySelector('.home-container').style.display = 'none';
+            document.querySelector('.add-container').style.display = 'none';
+            document.querySelector('.detail-container').style.display = 'none';
+            document.querySelector('.profile-container').style.display = 'block';
+            document.getElementById('bottom-nav').style.display = 'flex';
+            updateNavActive('profile');
+        }
+
+        function updateNavActive(tab) {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            if (tab === 'home') {
+                document.querySelector('.nav-item.home').classList.add('active');
+            } else if (tab === 'profile') {
+                document.querySelector('.nav-item.profile').classList.add('active');
+            }
+        }
+    </script>
+
+    <div id="bottom-nav" class="bottom-nav">
+        <div class="nav-item home active" onclick="showHomePage(); updateNavActive('home');">
+            <span>首页 Home</span>
+        </div>
+        <div class="nav-item profile" onclick="showProfilePage();">
+            <span>我 Me</span>
+        </div>
+    </div>
+
+    <div id="action-sheet-mask" class="action-sheet-mask">
+        <div class="action-sheet">
+            <div class="action-sheet-item" onclick="document.getElementById('avatar-input').click();">更改头像 Change Avatar</div>
+            <div class="action-sheet-item" onclick="showNicknameModal();">更改昵称 Edit Nickname</div>
+            <div class="action-sheet-item cancel" onclick="hideActionSheet();">取消 Cancel</div>
+        </div>
+    </div>
+    <input type="file" id="avatar-input" accept="image/*" style="display: none;" onchange="handleAvatarChange(event);">
+
+    <div id="nickname-modal" class="nickname-modal">
+        <div class="nickname-modal-content">
+            <div class="nickname-modal-title">修改昵称 Edit Nickname</div>
+            <input type="text" id="nickname-input" class="nickname-modal-input" placeholder="请输入新昵称 Enter new nickname">
+            <div class="nickname-modal-buttons">
+                <button class="btn btn-secondary" onclick="hideNicknameModal();">取消 Cancel</button>
+                <button class="btn" onclick="handleNicknameSave();">保存 Save</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
