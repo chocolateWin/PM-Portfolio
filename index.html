@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>阅读记录 Reading Log</title> Reading Log</title>
+    <title>阅读记录 Reading Log</title>
     <style>
         * {
             margin: 0;
@@ -119,9 +119,9 @@
             width: 100%;
             max-width: 393px;
             height: 60px;
-            background-color: white;
+            background: white;
             border-top: 1px solid #e0e0e0;
-            display: none;
+            display: flex;
             justify-content: space-around;
             align-items: center;
             z-index: 100;
@@ -136,11 +136,6 @@
             height: 44px;
             color: #999;
             font-size: 16px;
-            transition: all 0.2s ease;
-        }
-
-        .nav-item:hover {
-            color: #666;
         }
 
         .nav-item.active {
@@ -363,9 +358,18 @@
 
         .stats {
             text-align: center;
+            padding: 20px 0;
+        }
+
+        .stats-cn {
             font-size: 14px;
             color: #999;
-            padding: 20px 0;
+            margin-bottom: 4px;
+        }
+
+        .stats-en {
+            font-size: 12px;
+            color: #aaa;
         }
 
         .form-group {
@@ -881,12 +885,10 @@
         <div class="profile-container page">
             <div class="profile-content">
                 <div class="profile-main">
-                    <div id="profile-avatar" class="profile-avatar">
-                        <span id="profile-avatar-placeholder">👤</span>
-                    </div>
+                    <div id="profile-avatar" class="profile-avatar">👤</div>
                     <div id="profile-nickname" class="profile-nickname">用户 User</div>
                 </div>
-                <div class="profile-version">版本 Version v1.0.0</div>
+                <div class="profile-version">版本 Version v1.2.0</div>
             </div>
         </div>
 
@@ -938,6 +940,31 @@
                 </div>
             </div>
         </div>
+
+        <div id="action-sheet-mask" class="action-sheet-mask" style="display: none;">
+            <div class="action-sheet">
+                <div class="action-sheet-item" id="action-sheet-nickname">修改昵称 Edit Nickname</div>
+                <div class="action-sheet-item" id="action-sheet-avatar">更换头像 Change Avatar</div>
+                <input type="file" id="avatar-input" accept="image/*" style="display: none;">
+                <div class="action-sheet-item cancel">取消 Cancel</div>
+            </div>
+        </div>
+
+        <div id="nickname-modal" class="nickname-modal" style="display: none;">
+            <div class="nickname-modal-content">
+                <div class="nickname-modal-title">修改昵称 Edit Nickname</div>
+                <input type="text" id="nickname-input" class="nickname-modal-input" placeholder="请输入昵称">
+                <div class="nickname-modal-buttons">
+                    <button id="nickname-cancel" class="btn btn-secondary">取消 Cancel</button>
+                    <button id="nickname-save" class="btn">保存 Save</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="bottom-nav" class="bottom-nav">
+            <div class="nav-item home active">首页 Home</div>
+            <div class="nav-item profile">我 Me</div>
+        </div>
     </div>
 
     <script>
@@ -946,6 +973,23 @@
         let isExpanded = false;
         let isEditMode = false;
         let editId = null;
+
+        const anchorNameMap = {
+            "气味": "气味 Scent",
+            "地点": "地点 Location",
+            "回忆": "回忆 Memory",
+            "网络": "网络 Network",
+            "声音": "声音 Sound",
+            "温度/天气": "温度/天气 Temperature/Weather",
+            "情绪": "情绪 Emotion",
+            "物件": "物件 Object",
+            "时间/时刻": "时间/时刻 Time/Moment",
+            "颜色/视觉": "颜色/视觉 Color/Visual",
+            "书摘/台词": "书摘/台词 Excerpt/Line",
+            "人物/角色": "人物/角色 Character",
+            "疑问/困惑": "疑问/困惑 Question/Confusion",
+            "创意灵感": "创意灵感 Creative Inspiration"
+        };
 
         document.addEventListener('DOMContentLoaded', function() {
             const today = new Date().toISOString().split('T')[0];
@@ -1100,6 +1144,35 @@
                     hideActionSheet();
                 }
             });
+
+            document.getElementById('action-sheet-nickname').addEventListener('click', function() {
+                hideActionSheet();
+                showNicknameModal();
+            });
+
+            document.getElementById('action-sheet-avatar').addEventListener('click', function() {
+                hideActionSheet();
+                document.getElementById('avatar-input').click();
+            });
+
+            document.getElementById('avatar-input').addEventListener('change', function(e) {
+                handleAvatarChange(e);
+            });
+
+            document.querySelector('.action-sheet-item.cancel').addEventListener('click', function() {
+                hideActionSheet();
+            });
+
+            document.getElementById('nickname-cancel').addEventListener('click', function() {
+                hideNicknameModal();
+            });
+
+            document.getElementById('nickname-save').addEventListener('click', function() {
+                handleNicknameSave();
+            });
+
+            document.querySelector('.nav-item.home').onclick = () => { showHomePage(); updateNavActive('home'); };
+            document.querySelector('.nav-item.profile').onclick = () => { showProfilePage(); updateNavActive('profile'); };
         }
 
         function toggleAnchors() {
@@ -1160,6 +1233,15 @@
             document.querySelector('.profile-container').style.display = 'none';
             document.querySelector('.detail-container').style.display = 'block';
             document.getElementById('bottom-nav').style.display = 'none';
+        }
+
+        function showProfilePage() {
+            document.querySelector('.home-container').style.display = 'none';
+            document.querySelector('.add-container').style.display = 'none';
+            document.querySelector('.detail-container').style.display = 'none';
+            document.querySelector('.profile-container').style.display = 'block';
+            document.getElementById('bottom-nav').style.display = 'flex';
+            updateNavActive('profile');
         }
 
         function showDetailBackModal() {
@@ -1290,7 +1372,7 @@
             const totalRecords = records.length;
             const bookCount = records.filter(r => r.type === 'book').length;
             const movieCount = records.filter(r => r.type === 'movie').length;
-            statsElement.textContent = `共 ${totalRecords} 条记录 · ${bookCount} 本书 ${movieCount} 部电影 Records · Books · Movies`;
+            statsElement.innerHTML = `<div class="stats-cn">共 ${totalRecords} 条记录 · ${bookCount} 本书 · ${movieCount} 部电影</div><div class="stats-en">${totalRecords} records · ${bookCount} books · ${movieCount} movies</div>`;
         }
 
         function saveRecord() {
@@ -1349,6 +1431,45 @@
 
             localStorage.setItem('records', JSON.stringify(records));
 
+            // ========== 强制刷新首页列表（关键代码）==========
+            // 1. 重新获取数据（已经是最新的）
+            const updatedRecords = getRecords();
+            // 2. 根据当前筛选条件过滤
+            let filtered = updatedRecords.filter(r => currentFilter === 'all' || r.type === currentFilter);
+            // 3. 按日期倒序
+            filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+            // 4. 生成列表 HTML
+            const container = document.getElementById('records-container');
+            const statsElement = document.getElementById('stats');
+            if (filtered.length === 0) {
+                container.innerHTML = '';
+            } else {
+                container.innerHTML = filtered.map(record => {
+                    const anchorCount = Object.keys(record.anchors || {}).length;
+                    const typeIcon = record.type === 'book' ? '📖' : '🎬';
+                    let preview = record.review ? record.review.substring(0,30)+(record.review.length>30?'...':'') : (anchorCount>0 ? `记录了 ${anchorCount} 个锚点` : '');
+                    return `<div class="card record-item" data-id="${record.id}">
+                                ${record.cover ? `<img class="record-cover-img" src="${record.cover}" alt="封面">` : '<div class="record-cover-placeholder">📷</div>'}
+                                <div class="record-info">
+                                    <div class="record-title-row"><span class="record-type-icon">${typeIcon}</span><span class="record-title">${record.title}</span></div>
+                                    <div class="record-date">${record.date}</div>
+                                    ${record.otherInfo ? `<div class="record-other">${record.otherInfo}</div>` : ''}
+                                    ${preview ? `<div class="record-preview">${preview}</div>` : ''}
+                                </div>
+                            </div>`;
+                }).join('');
+                // 重新绑定点击事件
+                document.querySelectorAll('.record-item').forEach(item => {
+                    item.onclick = () => openDetailPage(item.dataset.id);
+                });
+            }
+            // 5. 更新统计
+            const total = updatedRecords.length;
+            const books = updatedRecords.filter(r => r.type === 'book').length;
+            const movies = total - books;
+            statsElement.innerHTML = `<div class="stats-cn">共 ${total} 条记录 · ${books} 本书 · ${movies} 部电影</div><div class="stats-en">${total} records · ${books} books · ${movies} movies</div>`;
+            // ========== 强制刷新结束 ==========
+
             if (isEditMode) {
                 const currentEditId = editId;
                 isEditMode = false;
@@ -1359,7 +1480,6 @@
             } else {
                 showHomePage();
             }
-            loadRecords();
             resetForm();
         }
 
@@ -1403,7 +1523,7 @@
                     <div class="detail-anchors">
                         ${Object.entries(anchors).map(([name, value]) => `
                             <div class="detail-anchor-item">
-                                <span class="detail-anchor-name">${name}</span>：${value}
+                                <span class="detail-anchor-name">${anchorNameMap[name] || name}</span>：${value}
                             </div>
                         `).join('')}
                     </div>
@@ -1502,7 +1622,7 @@
         function loadUserProfile() {
             const profile = getUserProfile();
             if (profile.nickname) {
-                document.getElementById('profile-nickname').textContent = profile.nickname;
+                document.getElementById('profile-nickname').textContent = profile.nickname === '用户' ? '用户 User' : profile.nickname;
             }
             if (profile.avatar) {
                 const avatarEl = document.getElementById('profile-avatar');
@@ -1562,10 +1682,11 @@
                         
                         const avatarEl = document.getElementById('profile-avatar');
                         avatarEl.innerHTML = '';
-                        const avatarImg = document.createElement('img');
-                        avatarImg.src = compressedBase64;
-                        avatarImg.alt = '头像';
-                        avatarEl.appendChild(avatarImg);
+                        const imgEl = document.createElement('img');
+                        imgEl.src = compressedBase64;
+                        imgEl.alt = '头像';
+                        avatarEl.appendChild(imgEl);
+                        
                         hideActionSheet();
                     };
                     img.src = originalBase64;
@@ -1574,98 +1695,59 @@
             }
         }
 
-        function compressImage(img, maxSize, quality) {
+        function compressImage(img, maxWidth, quality) {
             const canvas = document.createElement('canvas');
             let width = img.width;
             let height = img.height;
-            
-            if (width > maxSize || height > maxSize) {
-                if (width > height) {
-                    height = (height * maxSize) / width;
-                    width = maxSize;
-                } else {
-                    width = (width * maxSize) / height;
-                    height = maxSize;
-                }
+
+            if (width > maxWidth) {
+                height = (height * maxWidth) / width;
+                width = maxWidth;
             }
-            
+
             canvas.width = width;
             canvas.height = height;
-            
+
             const ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0, width, height);
-            
-            let compressed = canvas.toDataURL('image/jpeg', quality);
-            let currentQuality = quality;
-            
-            while (compressed.length * 0.75 > 200 * 1024 && currentQuality > 0.1) {
-                currentQuality -= 0.1;
-                compressed = canvas.toDataURL('image/jpeg', currentQuality);
-                console.log('Re-compressing with quality:', currentQuality, 'size:', Math.round(compressed.length * 0.75), 'bytes');
-            }
-            
-            return compressed;
+
+            return canvas.toDataURL('image/jpeg', quality);
         }
 
         function handleNicknameSave() {
             const nickname = document.getElementById('nickname-input').value.trim();
-            if (nickname) {
-                const profile = getUserProfile();
-                profile.nickname = nickname;
-                saveUserProfile(profile);
-                document.getElementById('profile-nickname').textContent = nickname;
+            if (!nickname) {
+                showAlertModal('请输入昵称 Please enter a nickname');
+                return;
             }
+
+            const profile = getUserProfile();
+            profile.nickname = nickname;
+            saveUserProfile(profile);
+
+            document.getElementById('profile-nickname').textContent = nickname;
             hideNicknameModal();
         }
 
-        function showProfilePage() {
-            document.querySelector('.home-container').style.display = 'none';
-            document.querySelector('.add-container').style.display = 'none';
-            document.querySelector('.detail-container').style.display = 'none';
-            document.querySelector('.profile-container').style.display = 'block';
-            document.getElementById('bottom-nav').style.display = 'flex';
-            updateNavActive('profile');
+        function showNavItems() {
+            const navItems = ['home', 'add', 'profile'];
+            navItems.forEach(item => {
+                const el = document.getElementById(`${item}-nav`);
+                if (el) {
+                    el.style.display = 'flex';
+                }
+            });
         }
 
-        function updateNavActive(tab) {
+        function updateNavActive(activeItem) {
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.remove('active');
             });
-            if (tab === 'home') {
-                document.querySelector('.nav-item.home').classList.add('active');
-            } else if (tab === 'profile') {
-                document.querySelector('.nav-item.profile').classList.add('active');
+            const activeEl = document.querySelector(`.nav-item.${activeItem}`);
+            if (activeEl) {
+                activeEl.classList.add('active');
             }
         }
     </script>
-
-    <div id="bottom-nav" class="bottom-nav">
-        <div class="nav-item home active" onclick="showHomePage(); updateNavActive('home');">
-            <span>首页 Home</span>
-        </div>
-        <div class="nav-item profile" onclick="showProfilePage();">
-            <span>我 Me</span>
-        </div>
-    </div>
-
-    <div id="action-sheet-mask" class="action-sheet-mask">
-        <div class="action-sheet">
-            <div class="action-sheet-item" onclick="document.getElementById('avatar-input').click();">更改头像 Change Avatar</div>
-            <div class="action-sheet-item" onclick="showNicknameModal();">更改昵称 Edit Nickname</div>
-            <div class="action-sheet-item cancel" onclick="hideActionSheet();">取消 Cancel</div>
-        </div>
-    </div>
-    <input type="file" id="avatar-input" accept="image/*" style="display: none;" onchange="handleAvatarChange(event);">
-
-    <div id="nickname-modal" class="nickname-modal">
-        <div class="nickname-modal-content">
-            <div class="nickname-modal-title">修改昵称 Edit Nickname</div>
-            <input type="text" id="nickname-input" class="nickname-modal-input" placeholder="请输入新昵称 Enter new nickname">
-            <div class="nickname-modal-buttons">
-                <button class="btn btn-secondary" onclick="hideNicknameModal();">取消 Cancel</button>
-                <button class="btn" onclick="handleNicknameSave();">保存 Save</button>
-            </div>
-        </div>
-    </div>
 </body>
 </html>
